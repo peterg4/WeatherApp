@@ -47,13 +47,13 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
       });
     $http({method : 'GET',url : five_day})
     .success(function(data, status) {
-      for(var i=0; i < 5; i++) {
+      console.log(data);
+      for(var i=0; i < 40; i+=8) {
         $scope.row.push("http://openweathermap.org/img/wn/"+data.list[i].weather[0].icon+"@2x.png");
         $scope.row.push(data.list[i].main.temp);
         $scope.row.push(dayOfWeek(data.list[i].dt));
         $scope.five.push($scope.row);
         $scope.row = [];
-        console.log(data);
       }           
     })
     .error(function(data, status) {
