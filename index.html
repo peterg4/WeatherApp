@@ -1,42 +1,43 @@
 <!doctype html>
+<html lang="en" ng-app="app">
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
-<link rel = "stylesheet" type = "text/css" href = "lab2.css"/>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel = "stylesheet" type = "text/css" href = "style.css"/>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-<html>
   <head>
-     <title>Lab 2</title>
+     <title>Weather</title>
   </head>
-  <body>
+  <body ng-controller="controller" ng-init="getWeather()">
     <h1>Search city, zip...</h1>
     <form action="index.html" method="get">
       <input type="text" name="search" placeholder="Search by city or zip"><br>
     </form>
     <br>
-    <div id="city"></div>
+    <div id="city">{{city}}</div>
     <br>
    
     <div id="demo">
       <div id="leftcol">
      <!--   <p id="min"></p> -->
-        <p id="temp"></p>
+        <p id="temp">{{main_temp}} &#176;<br></p>
       <!--  <p id="max"></p> -->
       </div>
-      <div id="icon"></div>
+      <div id="icon"><img src={{main_img}}></div>
       <div id="rightcol">
-        <p id="wind"></p>
-        <p id="hum"></p>
-        <p id="press"></p>
+        <p id="wind">Wind: {{wind}}mph<br></p>
+        <p id="hum">Humidity: {{hum}}%<br></p>
+        <p id="press">{{press}}</p>
       </div>
     </div>
 
     <div id="container">
-      <div id="start" class="target active"></div>
-      <div id="day0" class="target"></div>
-      <div id="day1" class="target"></div>
-      <div id="day2" class="target"></div>
-      <div id="day3" class="target"></div>
-      <div id="day4" class="target"></div>
+      <button ng-repeat="val in five" class="day">
+        <p>{{val[2]}}</p>
+        <img src={{val[0]}}><br>
+        <p>{{val[1]}}&#176;</p>
+      </button>
     </div>
     <script src="response.js"></script>
   </body>
