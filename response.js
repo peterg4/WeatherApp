@@ -92,6 +92,7 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
       $scope.hum = data.list[(i-1)*8].main.humidity;
       $scope.press = data.list[(i-1)*8].weather[0].description;
       $scope.curr_act = $scope.five[i];
+      changeFavicon($scope.main_img);
     })
   }
 }]);
