@@ -8,6 +8,20 @@ function dayOfWeek(dt) {
 }
 var app = angular.module("app", []);
 
+document.head || (document.head = document.getElementsByTagName('head')[0]);
+
+function changeFavicon(src) {
+ var link = document.createElement('link'),
+     oldLink = document.getElementById('dynamic-favicon');
+ link.id = 'dynamic-favicon';
+ link.rel = 'shortcut icon';
+ link.href = src;
+ if (oldLink) {
+  document.head.removeChild(oldLink);
+ }
+ document.head.appendChild(link);
+}
+
 app.controller("controller", ['$scope','$http',function($scope, $http) {
   $scope.city;
   $scope.main_temp;
@@ -32,6 +46,7 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
           $scope.city = data.name+', '+data.sys.country;
           $scope.main_temp = data.main.temp;
           $scope.main_img = "http://openweathermap.org/img/wn/"+data.weather[0].icon+"@2x.png";
+          changeFavicon($scope.main_img);
           $scope.wind = data.wind.speed;
           $scope.hum = data.main.humidity;
           $scope.press = data.weather[0].description;

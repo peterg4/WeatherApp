@@ -6,10 +6,12 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="">
+<body ng-controller="controller" ng-init="getWeather()">
   <head>
      <title>Weather</title>
   </head>
-  <body ng-controller="controller" ng-init="getWeather()">
+
     <h1>Search city, zip...</h1>
     <form action="index.html" method="get">
       <input type="text" name="search" placeholder="Search by city or zip"><br>
