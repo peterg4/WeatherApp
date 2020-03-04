@@ -17,6 +17,10 @@ form {
 button{
     background-color: transparent;
 }
+button:focus{
+    outline: none;
+    border: 1px solid #444444;
+}
 input[type=text] {
     width: 15%;
     box-sizing: border-box;

@@ -58,6 +58,11 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
     });
   }
   $scope.newMain = function(i) {
+    if(i == 0){
+      $scope.five = [];
+      $scope.getWeather();
+      return;
+    }
     try { 
       var get_value = window.location.href.match(/(?<=search=)(.*?)[^&]+/)[0];
       var five_day = "https://api.openweathermap.org/data/2.5/forecast?zip="+get_value+"&units=imperial&appid="+realkey;
@@ -66,11 +71,11 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
     }
     $http({method : 'GET',url : five_day})
     .success(function(data, status) {
-      $scope.main_temp = data.list[i*8].main.temp;
-      $scope.main_img = "http://openweathermap.org/img/wn/"+data.list[i*8].weather[0].icon+"@2x.png";
-      $scope.wind = data.list[i*8].wind.speed;
-      $scope.hum = data.list[i*8].main.humidity;
-      $scope.press = data.list[i*8].weather[0].description;
+      $scope.main_temp = data.list[(i-1)*8].main.temp;
+      $scope.main_img = "http://openweathermap.org/img/wn/"+data.list[(i-1)*8].weather[0].icon+"@2x.png";
+      $scope.wind = data.list[(i-1)*8].wind.speed;
+      $scope.hum = data.list[(i-1)*8].main.humidity;
+      $scope.press = data.list[(i-1)*8].weather[0].description;
       $scope.curr_act = $scope.five[i];
     })
   }
