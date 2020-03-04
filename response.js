@@ -21,7 +21,8 @@ function changeFavicon(src) {
  }
  document.head.appendChild(link);
 }
-
+var five_day;
+var call;
 app.controller("controller", ['$scope','$http',function($scope, $http) {
   $scope.city;
   $scope.main_temp;
@@ -32,16 +33,33 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
   $scope.curr_act;
   $scope.five = [];
   $scope.row = [];
+  $scope.position;
+  $scope.lon;
+  $scope.lat;
   $scope.getWeather = function() {
     try { 
       var get_value = window.location.href.match(/(?<=search=)(.*?)[^&]+/)[0];
       var call = "https://api.openweathermap.org/data/2.5/weather?zip="+get_value+"&units=imperial&appid="+realkey;
       var five_day = "https://api.openweathermap.org/data/2.5/forecast?zip="+get_value+"&units=imperial&appid="+realkey;
+      $scope.makeCall(call, five_day);
     } catch{
-      var call = "https://api.openweathermap.org/data/2.5/weather?q="+get_value+"&units=imperial&appid="+realkey;
-      var five_day = "https://api.openweathermap.org/data/2.5/forecast?q="+get_value+"&units=imperial&appid="+realkey;
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        }
+      }
+      function showPosition(position) {
+        $scope.lat = position.coords.latitude;
+        $scope.lon = position.coords.longitude;
+        call = "https://api.openweathermap.org/data/2.5/weather?lat="+$scope.lat+"&lon="+$scope.lon+"&units=imperial&appid="+realkey;
+        five_day = "https://api.openweathermap.org/data/2.5/forecast?lat="+$scope.lat+"&lon="+$scope.lon+"&units=imperial&appid="+realkey;
+        $scope.makeCall(call, five_day);
+      }
+      getLocation()
     }
-    $http({method : 'GET',url : call})
+  }
+    $scope.makeCall = function(call, five_day) {
+      $http({method : 'GET',url : call})
       .success(function(data, status) {
           $scope.city = data.name+', '+data.sys.country;
           $scope.main_temp = data.main.temp;
@@ -57,42 +75,42 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
       .error(function(data, status) {
           alert("Error");
       });
-    $http({method : 'GET',url : five_day})
-    .success(function(data, status) {
-      console.log(data);
-      for(var i=0; i < 40; i+=8) {
-        $scope.row.push("http://openweathermap.org/img/wn/"+data.list[i].weather[0].icon+"@2x.png");
-        $scope.row.push(data.list[i].main.temp);
-        $scope.row.push(dayOfWeek(data.list[i].dt));
-        $scope.five.push($scope.row);
-        $scope.row = [];
-      }           
-    })
-    .error(function(data, status) {
-        alert("Error");
-    });
-  }
-  $scope.newMain = function(i) {
-    if(i == 0){
-      $scope.five = [];
-      $scope.getWeather();
-      return;
+      $http({method : 'GET',url : five_day})
+      .success(function(data, status) {
+        console.log(data);
+        for(var i=0; i < 40; i+=8) {
+          $scope.row.push("http://openweathermap.org/img/wn/"+data.list[i].weather[0].icon+"@2x.png");
+          $scope.row.push(data.list[i].main.temp);
+          $scope.row.push(dayOfWeek(data.list[i].dt));
+          $scope.five.push($scope.row);
+          $scope.row = [];
+        }           
+      })
+      .error(function(data, status) {
+          alert("Error");
+      });
     }
-    try { 
-      var get_value = window.location.href.match(/(?<=search=)(.*?)[^&]+/)[0];
-      var five_day = "https://api.openweathermap.org/data/2.5/forecast?zip="+get_value+"&units=imperial&appid="+realkey;
-    } catch{
-      var five_day = "https://api.openweathermap.org/data/2.5/forecast?q="+get_value+"&units=imperial&appid="+realkey;
+    $scope.newMain = function(i) {
+      if(i == 0){
+        $scope.five = [];
+        $scope.getWeather();
+        return;
+      }
+      try { 
+        var get_value = window.location.href.match(/(?<=search=)(.*?)[^&]+/)[0];
+        var five_day = "https://api.openweathermap.org/data/2.5/forecast?zip="+get_value+"&units=imperial&appid="+realkey;
+      } catch{
+        var five_day = "https://api.openweathermap.org/data/2.5/forecast?q=12180&units=imperial&appid="+realkey;
+      }
+      $http({method : 'GET',url : five_day})
+      .success(function(data, status) {
+        $scope.main_temp = data.list[(i-1)*8].main.temp;
+        $scope.main_img = "http://openweathermap.org/img/wn/"+data.list[(i-1)*8].weather[0].icon+"@2x.png";
+        $scope.wind = data.list[(i-1)*8].wind.speed;
+        $scope.hum = data.list[(i-1)*8].main.humidity;
+        $scope.press = data.list[(i-1)*8].weather[0].description;
+        $scope.curr_act = $scope.five[i];
+        changeFavicon($scope.main_img);
+      })
     }
-    $http({method : 'GET',url : five_day})
-    .success(function(data, status) {
-      $scope.main_temp = data.list[(i-1)*8].main.temp;
-      $scope.main_img = "http://openweathermap.org/img/wn/"+data.list[(i-1)*8].weather[0].icon+"@2x.png";
-      $scope.wind = data.list[(i-1)*8].wind.speed;
-      $scope.hum = data.list[(i-1)*8].main.humidity;
-      $scope.press = data.list[(i-1)*8].weather[0].description;
-      $scope.curr_act = $scope.five[i];
-      changeFavicon($scope.main_img);
-    })
-  }
 }]);
