@@ -15,13 +15,9 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
   $scope.wind;
   $scope.hum;
   $scope.press;
-
+  $scope.curr_act;
   $scope.five = [];
   $scope.row = [];
-  $scope.d0img;
-  $scope.d0temp;
-  $scope.d0day;
-
   $scope.getWeather = function() {
     try { 
       var get_value = window.location.href.match(/(?<=search=)(.*?)[^&]+/)[0];
@@ -40,7 +36,8 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
           $scope.hum = data.main.humidity;
           $scope.press = data.weather[0].description;
           console.log(data);
-          $scope.five.push([$scope.main_img,$scope.main_temp,dayOfWeek(data.dt)]) ;    
+          $scope.five.push([$scope.main_img,$scope.main_temp,dayOfWeek(data.dt)]) ;  
+          $scope.curr_act = $scope.five[0];  
       })
       .error(function(data, status) {
           alert("Error");
@@ -58,6 +55,9 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
     })
     .error(function(data, status) {
         alert("Error");
-    });             
+    });
+  }
+  $scope.newMain = function(i) {
+    console.log(i);
   }
 }]);

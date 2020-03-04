@@ -20,9 +20,7 @@
    
     <div id="demo">
       <div id="leftcol">
-     <!--   <p id="min"></p> -->
         <p id="temp">{{main_temp}} &#176;<br></p>
-      <!--  <p id="max"></p> -->
       </div>
       <div id="icon"><img src={{main_img}}></div>
       <div id="rightcol">
@@ -33,7 +31,7 @@
     </div>
 
     <div id="container">
-      <button ng-repeat="val in five" class="day">
+      <button ng-repeat="val in five" ng-class="{'active': val == curr_act}" class="day" ng-click="newMain($index)">
         <p>{{val[2]}}</p>
         <img src={{val[0]}}><br>
         <p>{{val[1]}}&#176;</p>
