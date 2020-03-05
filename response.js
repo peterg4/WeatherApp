@@ -25,22 +25,28 @@ var five_day;
 var call;
 app.controller("controller", ['$scope','$http',function($scope, $http) {
   $scope.city;
-  $scope.main_temp;
+  $scope.main_temp = 0;
   $scope.main_img;
-  $scope.wind;
-  $scope.hum;
-  $scope.press;
+  $scope.wind = 0;
+  $scope.hum = 0;
+  $scope.press = 0;
   $scope.curr_act;
   $scope.five = [];
   $scope.row = [];
   $scope.position;
-  $scope.lon;
-  $scope.lat;
+  $scope.lon = 0;
+  $scope.lat = 0;
   $scope.getWeather = function() {
     try { 
       var get_value = window.location.href.match(/(?<=search=)(.*?)[^&]+/)[0];
-      var call = "https://api.openweathermap.org/data/2.5/weather?zip="+get_value+"&units=imperial&appid="+realkey;
-      var five_day = "https://api.openweathermap.org/data/2.5/forecast?zip="+get_value+"&units=imperial&appid="+realkey;
+      console.log(get_value);
+      if(parseInt(get_value)) {
+        var call = "https://api.openweathermap.org/data/2.5/weather?zip="+get_value+"&units=imperial&appid="+realkey;
+        var five_day = "https://api.openweathermap.org/data/2.5/forecast?zip="+get_value+"&units=imperial&appid="+realkey;
+      } else {
+        var call = "https://api.openweathermap.org/data/2.5/weather?q="+get_value+"&units=imperial&appid="+realkey;
+        var five_day = "https://api.openweathermap.org/data/2.5/forecast?q="+get_value+"&units=imperial&appid="+realkey;
+      }
       $scope.makeCall(call, five_day);
     } catch{
       function getLocation() {
@@ -73,7 +79,7 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
           $scope.curr_act = $scope.five[0];  
       })
       .error(function(data, status) {
-          alert("Error");
+          $scope.city = "Unknown Entry";
       });
       $http({method : 'GET',url : five_day})
       .success(function(data, status) {
@@ -87,7 +93,9 @@ app.controller("controller", ['$scope','$http',function($scope, $http) {
         }           
       })
       .error(function(data, status) {
-          alert("Error");
+          call = "https://api.openweathermap.org/data/2.5/weather?lat="+$scope.lat+"&lon="+$scope.lon+"&units=imperial&appid="+realkey;
+          five_day = "https://api.openweathermap.org/data/2.5/forecast?lat="+$scope.lat+"&lon="+$scope.lon+"&units=imperial&appid="+realkey;
+          $scope.makeCall(call, five_day);
       });
     }
     $scope.newMain = function(i) {
